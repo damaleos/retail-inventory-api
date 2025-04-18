@@ -5,6 +5,7 @@ import com.damaleos.demo.retail.domain.model.Price;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -31,5 +32,10 @@ public class ApplicationController {
     @PostMapping("/prices")
     public Price createPrice(@RequestBody Price price){
         return priceService.createPrice(price);
+    }
+
+    @GetMapping("/applicablePrice")
+    public Price getApplicablePrice (@RequestParam LocalDateTime dateTime, @RequestParam int brandId, @RequestParam int productId) {
+        return priceService.findApplicablePrice(dateTime, brandId, productId);
     }
 }

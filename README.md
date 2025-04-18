@@ -24,6 +24,7 @@ This is a RESTful API built with Spring Boot that allows clients to query produc
     - Product ID
     - Brand ID
 - Returns the applicable price, price list, and valid date range
+- Uses priority to resolve conflicts when multiple price ranges overlap
 - Database is initialized automatically at startup using H2 and `src/main/resources/data.sql`
 - Includes integration tests for all main business scenarios
 
@@ -34,13 +35,13 @@ This is a RESTful API built with Spring Boot that allows clients to query produc
 ### `GET /api/prices`
 
 **Query Parameters:**
-- `startDate` (e.g., `2020-06-14T10:00:00`)
+- `dateTime` (e.g., `2020-06-14T10:00:00`)
 - `productId` (e.g., `35455`)
 - `brandId` (e.g., `1`)
 
 **Example request:**
 ```
-GET /api/prices?startDate=2020-06-14T10:00:00&productId=35455&brandId=1
+GET /api/applicablePrice?dateTime=2020-06-14T10:00:00&productId=35455&brandId=1
 ```
 
 **Example response:**

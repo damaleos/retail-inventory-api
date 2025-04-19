@@ -2,7 +2,10 @@ package com.damaleos.demo.retail.infrastructure.controller;
 
 import com.damaleos.demo.retail.application.service.PriceService;
 import com.damaleos.demo.retail.domain.model.Price;
+import com.damaleos.demo.retail.infrastructure.controller.dto.ApplicablePriceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -20,22 +23,43 @@ public class ApplicationController {
     }
 
     @GetMapping("/prices")
-    public List<Price> getAllPrices() {
-        return priceService.getAllPrices();
+    public ResponseEntity<List<Price>> getAllPrices() {
+        List<Price> prices = priceService.getAllPrices();
+        return ResponseEntity.ok(prices);
     }
 
     @GetMapping("/prices/{id}")
-    public Price getPriceById(@PathVariable Long id) {
-        return priceService.getPriceById(id);
+    public ResponseEntity<Price> getPriceById(@PathVariable Long id) {
+        Price price = priceService.getPriceById(id);
+        if (price == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(price);
     }
 
     @PostMapping("/prices")
-    public Price createPrice(@RequestBody Price price){
-        return priceService.createPrice(price);
+    public ResponseEntity<Price> createPrice(@RequestBody Price price){
+        Price createdPrice = priceService.createPrice(price);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPrice);
     }
 
     @GetMapping("/applicablePrice")
-    public Price getApplicablePrice (@RequestParam LocalDateTime dateTime, @RequestParam int brandId, @RequestParam int productId) {
-        return priceService.findApplicablePrice(dateTime, brandId, productId);
+    public ResponseEntity<ApplicablePriceResponse> getApplicablePrice (@RequestParam LocalDateTime dateTime, @RequestParam int brandId, @RequestParam int productId) {
+        Price price = priceService.findApplicablePrice(dateTime, brandId, productId);
+
+        if (price == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ApplicablePriceResponse response = new ApplicablePriceResponse();
+        response.setProductId(price.getProductId());
+        response.setBrandId(price.getBrandId());
+        response.setPriceList(price.getPriceList());
+        response.setStartDate(price.getStartDate());
+        response.setEndDate(price.getEndDate());
+        response.setFinalPrice(price.getPrice());
+        response.setCurrency(price.getCurrency());
+
+        return ResponseEntity.ok(response);
     }
 }

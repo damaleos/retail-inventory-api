@@ -32,7 +32,7 @@ This is a RESTful API built with Spring Boot that allows clients to query produc
 
 ## 📦 API Endpoint
 
-### `GET /api/prices`
+### `GET /api/applicablePrice`
 
 **Query Parameters:**
 - `dateTime` (e.g., `2020-06-14T10:00:00`)
